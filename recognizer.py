@@ -16,6 +16,7 @@ class Config:
   THETA_DELTA = 2.0
   PHI = 0.5 * (-1.0 + math.sqrt(5.0))
   HALF_DIAGONAL = 0.5 * math.sqrt(SIZE * SIZE + SIZE * SIZE)
+  REQUIRED_POINTS = 3
 
 class Template:
   def __init__(self, index: int, name: str, points: list[Point]) -> None:
@@ -180,6 +181,23 @@ def _convert_points(points: list[Point]) -> list[Point]:
 
     return points
 
+def _evaluate_list(points: list[Point]) -> bool:
+  if len(points) <= Config.REQUIRED_POINTS:
+    return False
+  
+  l_x = [p.x for p in points]
+  l_y = [p.y for p in points]
+
+  min_x = min(l_x)
+  max_x = max(l_x)
+  min_y = min(l_y)
+  max_y = max(l_y)
+
+  if min_x == max_x or min_y == max_y:
+    return False
+  
+  return True
+
 predefined_gestures: dict[str, list[Point]] = {
   "triangle": [Point(137,139),Point(135,141),Point(133,144),Point(132,146),Point(130,149),Point(128,151),Point(126,155),Point(123,160),Point(120,166),Point(116,171),Point(112,177),Point(107,183),Point(102,188),Point(100,191),Point(95,195),Point(90,199),Point(86,203),Point(82,206),Point(80,209),Point(75,213),Point(73,213),Point(70,216),Point(67,219),Point(64,221),Point(61,223),Point(60,225),Point(62,226),Point(65,225),Point(67,226),Point(74,226),Point(77,227),Point(85,229),Point(91,230),Point(99,231),Point(108,232),Point(116,233),Point(125,233),Point(134,234),Point(145,233),Point(153,232),Point(160,233),Point(170,234),Point(177,235),Point(179,236),Point(186,237),Point(193,238),Point(198,239),Point(200,237),Point(202,239),Point(204,238),Point(206,234),Point(205,230),Point(202,222),Point(197,216),Point(192,207),Point(186,198),Point(179,189),Point(174,183),Point(170,178),Point(164,171),Point(161,168),Point(154,160),Point(148,155),Point(143,150),Point(138,148),Point(136,148)],
 	
@@ -203,6 +221,12 @@ class Recogniser:
         self.add_template(key, value)      
 
   def recognise(self, points: list[Point]) -> tuple[Template, float]:
+    '''
+      important note: length of list must be 2 or greater although it makes no sense to evaluate a path with 2 points. also the points must differentiate in x-axis and y-axis. e.g. point(10,10) and point(10,10) are not allowed because it results in a 0 length bounding box, throwing a division by zero error.
+    '''
+    if not _evaluate_list(points):
+      return (None, None)
+
     points = _convert_points(points)
 
     b = float("infinity")
@@ -219,7 +243,10 @@ class Recogniser:
     
     return (found_template, score)
 
-  def add_template(self, name: str, points: list[Point]) -> None: 
+  def add_template(self, name: str, points: list[Point]) -> None:
+    if not _evaluate_list(points):
+      return
+
     points = _convert_points(points)
     
     template = Template(len(self.templates), name, points)
