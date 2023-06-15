@@ -185,15 +185,9 @@ def _evaluate_list(points: list[Point]) -> bool:
   if len(points) <= Config.REQUIRED_POINTS:
     return False
   
-  l_x = [p.x for p in points]
-  l_y = [p.y for p in points]
+  p_min, p_max = _bounding_box(points)
 
-  min_x = min(l_x)
-  max_x = max(l_x)
-  min_y = min(l_y)
-  max_y = max(l_y)
-
-  if min_x == max_x or min_y == max_y:
+  if p_min.x == p_max.x or p_min.y == p_max.y:
     return False
   
   return True
