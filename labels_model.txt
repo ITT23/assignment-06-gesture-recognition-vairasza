@@ -1,0 +1,1 @@
+['arrow', 'question_mark', 'check', 'delete_mark', 'rectangle', 'right_sq_bracket', 'right_curly_brace', 'triangle', 'caret', 'pigtail', 'x', 'v', 'left_curly_brace', 'circle', 'star', 'left_sq_bracket']

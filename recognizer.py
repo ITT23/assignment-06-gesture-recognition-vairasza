@@ -181,6 +181,13 @@ def _convert_points(points: list[Point]) -> list[Point]:
 
     return points
 
+def _mirror_points(points: list[Point]) -> list[Point]:
+  new_points = []
+  for p in points:
+    new_points.append(Point(-1 * p.x, p.y))
+
+  return new_points
+
 def _evaluate_list(points: list[Point]) -> bool:
   if len(points) <= Config.REQUIRED_POINTS:
     return False
@@ -208,11 +215,10 @@ class Recogniser:
 
   def __init__(self, use_predefined_templates: bool=True) -> None:
     self.templates: list[Template] = []
-    self.template_names: list[str] = []
 
     if use_predefined_templates:
       for key, value in predefined_gestures.items():
-        self.add_template(key, value)      
+        self.add_template(key, value)
 
   def recognise(self, points: list[Point]) -> tuple[Template, float]:
     '''
@@ -227,23 +233,30 @@ class Recogniser:
     found_template: Template = None
 
     for template in self.templates:
-        d = _distance_at_best_angle(points, template, Config.PHI, Config.THETA_NEG, Config.THETA_POS, Config.THETA_DELTA)
+      d = _distance_at_best_angle(points, template, Config.PHI, Config.THETA_NEG, Config.THETA_POS, Config.THETA_DELTA)
 
-        if d < b:
-          b = d
-          found_template = template
+      if d < b:
+        b = d
+        found_template = template
 
     score = 1.0 - (b / Config.HALF_DIAGONAL)
     
     return (found_template, score)
 
-  def add_template(self, name: str, points: list[Point]) -> None:
+  def add_template(self, name: str, points: list[Point]) -> bool:
+    '''
+      adding _mirror_points which mirrors all points along the x-axis so that you avoid the 1$ recogniser limitation where only one draw direction for a gesture works
+    '''
     if not _evaluate_list(points):
-      return
+      return False
 
-    points = _convert_points(points)
+    converted_points = _convert_points(points)
+    mirrored_points = _mirror_points(converted_points)
     
-    template = Template(len(self.templates), name, points)
+    template = Template(len(self.templates), name, converted_points)
+    mirrored_template = Template(len(self.templates)+1, name, mirrored_points)
 
     self.templates.append(template)
-    self.template_names.append(name)
+    self.templates.append(mirrored_template)
+    
+    return True
