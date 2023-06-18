@@ -1,16 +1,16 @@
 # application for task 3
 # gesture input program for first task
 import time, random
-from typing import Union, Callable
+from typing import Union
 
 from pyglet import app, window
 from pyglet.clock import schedule_once
 from pyglet.shapes import Circle, Rectangle
 from pyglet.text import Label
-from pyglet.window import key
 
 from game.Config import Color, Font, Rects, Gestures, App
 from recognizer import Recogniser, Point, Template
+
 
 class GameState:
   SHOW = 1
@@ -18,6 +18,7 @@ class GameState:
   AWAIT = 3
   END = 4
   WON = 5
+
 
 class Card:
 
@@ -113,9 +114,8 @@ class Menu:
 
 class Game():
 
-  def __init__(self, width: int, height: int, menu: Menu, clear_gesture: Callable) -> None:
+  def __init__(self, width: int, height: int, menu: Menu) -> None:
     self.menu = menu
-    self.clear_gesture = clear_gesture
     self.cards: list[Card] = []
     self.sequence: list[int] = list(range(18))
     random.shuffle(self.sequence)
@@ -166,8 +166,8 @@ class Game():
     elif collided_card.label.text == gesture_name and collided_card.idx == self.sequence[self.sequence_index] and self.sequence_index == self.player_index:
       collided_card.correct() #this can stay open until the end
       self.sequence_index += 1 #player advances and can input the next gesture
-      self.state = GameState.SHOW
-      #check if all cards are open => win -> think it s okay
+      
+      schedule_once(self._change_state_to_show, App.END_OF_SEQUENCE_WAIT) #wait a second so that the player better understand that the last item in the sequence was correct
 
     #if player guess the current card in sequence
     elif collided_card.label.text == gesture_name and collided_card.idx == self.sequence[self.player_index]:
@@ -177,11 +177,12 @@ class Game():
     else:
       collided_card.wrong()
       self.state = GameState.END
-      self.menu.game_over()
+
+  def _change_state_to_show(self, *_) -> None:
+    self.state = GameState.SHOW
 
   def _change_state_to_await(self, *_) -> None:
     self.state = GameState.AWAIT
-    self.clear_gesture()
 
   def _turn_all_cards(self) -> None:
     for card in self.cards:
@@ -238,7 +239,7 @@ class Application:
     self._init()
     
   def _init(self) -> None:
-    self.game = Game(self.window.width, self.window.height, self.menu, self._clear_gesture)
+    self.game = Game(self.window.width, self.window.height, self.menu)
     self._clear_gesture()
 
   def _clear_gesture(self, *_) -> None:
