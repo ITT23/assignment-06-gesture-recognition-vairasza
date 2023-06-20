@@ -15,12 +15,12 @@
 
 ## Gesture Detection Game
 
-- gesture-application.py contains the game along with a config file
+- gesture-application.py contains the game along with a config file and sound file
 - it is a memory game where each card hides a written gesture
-- first, the computer shows the player a sequence of cards with a written gesture to memorise
-- after that, the player must draw the gestures on the according cards and in sequence
+- first, the computer shows the player a sequence of cards with a written gesture to memorise - the sequence is extended with each turn
+- after that, the player must draw the gestures on the according cards; the sequence from start to the current element
 - if correct, the computer plays the sequence extended by the next element starting with the first element
-- if wrong, the game ends
+- if wrong, the game ends indicated by a red bordered card
 - ends if all cards are correctly guessed
 - the sequence and gestures are random each game
 - the game only accepts gestures after the sequence is played otherwise gestures are ignored or lead to sequence interruption

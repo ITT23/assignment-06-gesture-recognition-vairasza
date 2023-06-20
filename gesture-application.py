@@ -178,10 +178,15 @@ class Game():
     elif collided_card.label.text == gesture_name and collided_card.idx == self.sequence[self.player_index]:
       collided_card.correct()
       self.player_index += 1
-    
+
     else:
+      correct_card = self.cards[self.sequence[self.player_index]]
+      correct_card.correct()
+      
       collided_card.wrong()
+
       self.state = GameState.END
+
 
   def _change_state_to_show(self, *_) -> None:
     self.state = GameState.SHOW
