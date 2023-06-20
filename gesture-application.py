@@ -112,6 +112,7 @@ class Menu:
   def game_won(self) -> None:
     self.state_indicator.text = App.WON_GAME_TEXT
 
+
 class Game():
 
   def __init__(self, width: int, height: int, menu: Menu) -> None:
@@ -298,6 +299,7 @@ class Application:
     
   def on_mouse_press(self, *_) -> None:
     self._clear_gesture()
+
 
 if __name__ == "__main__":
   application = Application()

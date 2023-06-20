@@ -32,7 +32,6 @@ class App:
   CIRCLE_RADIUS_START = 8
   SAMPLE_POINTS = 50
 
-  STATE_WARNING = "Drawing gesture sequence only after showing sequence..."
   TOO_FEW_POINTS = "Too few points drawn."
 
   FLASH_TIME = 2
@@ -47,7 +46,7 @@ class App:
   STATE_TEXT_X = 20
   STATE_TEXT_Y = HEIGHT - 30
 
-  START_GAME_TEXT = "GESTURE SEQUENCE IS PLAYED"
-  AWAIT_GAME_TEXT = "DRAW GESTURES IN SEQUENCE"
+  START_GAME_TEXT = "STATE: SHOWING SEQUENCE"
+  AWAIT_GAME_TEXT = "STATE: AWAITING YOUR GESTURE SEQUENCE"
   OVER_GAME_TEXT = "Game over! Sequence was incorrect! Draw X to end the game or CHECK to play a new game."
   WON_GAME_TEXT = "You managed to correctly guess the whole sequence. Congratulations!"
