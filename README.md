@@ -25,8 +25,10 @@
 - the sequence and gestures are random each game
 - the game only accepts gestures after the sequence is played otherwise gestures are ignored or lead to sequence interruption
 - the state of the game is indicated in the top left text
+- additionally, there is a bell sound when the computer finished showing the sequence and the player can start drawing gestures
 - the last recognised gesture is indicated in the bot left text
 - the gesture must not be extaclty within the card; it can overlap because the game checks what card contains the most points and chooses it this way
+- if the wav music file is not working, please change to mp3 in config.py
 
 ### CONTROLS:
 

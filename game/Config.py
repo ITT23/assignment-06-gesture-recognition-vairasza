@@ -50,3 +50,5 @@ class App:
   AWAIT_GAME_TEXT = "STATE: AWAITING YOUR GESTURE SEQUENCE"
   OVER_GAME_TEXT = "Game over! Sequence was incorrect! Draw X to end the game or CHECK to play a new game."
   WON_GAME_TEXT = "You managed to correctly guess the whole sequence. Congratulations!"
+
+  SOUNDFILE = "game/bell.wav"

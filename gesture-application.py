@@ -1,9 +1,9 @@
 # application for task 3
 # gesture input program for first task
-import time, random
+import time, random, os
 from typing import Union
 
-from pyglet import app, window
+from pyglet import app, media, window
 from pyglet.clock import schedule_once
 from pyglet.shapes import Circle, Rectangle
 from pyglet.text import Label
@@ -115,8 +115,12 @@ class Menu:
 
 class Game():
 
+  SCRIPT_DIR = os.path.dirname(__file__)
+
   def __init__(self, width: int, height: int, menu: Menu) -> None:
     self.menu = menu
+    self.sound_file = media.load(os.path.join(self.SCRIPT_DIR, App.SOUNDFILE))
+    self.audio_player = media.Player()
     self.cards: list[Card] = []
     self.sequence: list[int] = list(range(18))
     random.shuffle(self.sequence)
@@ -184,6 +188,8 @@ class Game():
 
   def _change_state_to_await(self, *_) -> None:
     self.state = GameState.AWAIT
+    self.audio_player.queue(self.sound_file)
+    self.audio_player.play()
 
   def _turn_all_cards(self) -> None:
     for card in self.cards:
